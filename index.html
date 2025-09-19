@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Anak-Anak Baik</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: #f4f4f4;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .envelope:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: 
+                linear-gradient(45deg, 
+                    #e8e8e8 0%, #e8e8e8 6.25%, 
+                    #ddd 6.25%, #ddd 12.5%,
+                    #e8e8e8 12.5%, #e8e8e8 18.75%,
+                    #ddd 18.75%, #ddd 25%,
+                    #e8e8e8 25%, #e8e8e8 31.25%,
+                    #ddd 31.25%, #ddd 37.5%,
+                    #e8e8e8 37.5%, #e8e8e8 43.75%,
+                    #ddd 43.75%, #ddd 50%,
+                    #e8e8e8 50%, #e8e8e8 56.25%,
+                    #ddd 56.25%, #ddd 62.5%,
+                    #e8e8e8 62.5%, #e8e8e8 68.75%,
+                    #ddd 68.75%, #ddd 75%,
+                    #e8e8e8 75%, #e8e8e8 81.25%,
+                    #ddd 81.25%, #ddd 87.5%,
+                    #e8e8e8 87.5%, #e8e8e8 93.75%,
+                    #ddd 93.75%, #ddd 100%);
+            background-size: 8px 8px;
+            transform-origin: top center;
+            transition: transform 0.6s ease;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            z-index: 3;
+            border: 3px solid #333;
+            border-bottom: none;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .envelope.opened .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    #f4f4f4 0px, #f4f4f4 4px,
+                    #e8e8e8 4px, #e8e8e8 8px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    #f4f4f4 0px, #f4f4f4 4px,
+                    #e8e8e8 4px, #e8e8e8 8px
+                );
+            border: 3px solid #333;
+            border-top: none;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .letter-preview {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 140px;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    #fefefe 0px, #fefefe 3px,
+                    #f8f8f8 3px, #f8f8f8 6px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    #fefefe 0px, #fefefe 3px,
+                    #f8f8f8 3px, #f8f8f8 6px
+                );
+            border: 2px solid #333;
+            transform: translateY(0);
+            transition: transform 0.6s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .envelope.opened .letter-preview {
+            transform: translateY(-40px);
+        }
+
+        .heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: #ff6b6b;
+            transition: all 0.3s ease;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            position: relative;
+        }
+
+        .heart::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, #ff6b6b 0%, #ff6b6b 25%, transparent 25%),
+                radial-gradient(circle at 75% 25%, #ff6b6b 0%, #ff6b6b 25%, transparent 25%),
+                linear-gradient(45deg, 
+                    transparent 0%, transparent 40%,
+                    #ff6b6b 40%, #ff6b6b 60%,
+                    transparent 60%, transparent 100%);
+            background-size: 16px 16px, 16px 16px, 8px 8px;
+            background-position: 0 0, 0 0, 0 0;
+        }
+
+        .envelope:hover .heart {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .click-hint {
+            display: none;
+        }
+
+        .letter-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .letter-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .letter-content {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            background-image: 
+                linear-gradient(90deg, #f7f3f0 0%, #f7f3f0 100%),
+                repeating-linear-gradient(
+                    transparent,
+                    transparent 24px,
+                    #e8e2db 24px,
+                    #e8e2db 26px
+                );
+            background-size: 100% 100%, 100% 26px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideUp 0.4s ease;
+        }
+
+        .letter-header {
+            padding: 30px 40px 20px;
+            border-bottom: 2px solid #e8e2db;
+            background: #f7f3f0;
+            text-align: center;
+        }
+
+        .letter-title {
+            font-size: 24px;
+            color: #8b4513;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .letter-date {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .letter-body {
+            padding: 30px 40px;
+            max-height: 60vh;
+            overflow-y: auto;
+            line-height: 1.8;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .letter-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .letter-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .letter-body::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .letter-body::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .signature {
+            margin-top: 30px;
+            text-align: right;
+            font-style: italic;
+            color: #8b4513;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 300px;
+                height: 250px;
+            }
+
+            .envelope {
+                height: 150px;
+            }
+
+            .envelope-flap {
+                height: 75px;
+            }
+
+            .envelope-body {
+                height: 90px;
+            }
+
+            .letter-preview {
+                height: 105px;
+            }
+
+            .heart {
+                width: 30px;
+                height: 30px;
+                font-size: 30px;
+            }
+
+            .letter-content {
+                margin: 10px;
+                max-height: 85vh;
+            }
+
+            .letter-header {
+                padding: 20px 25px 15px;
+            }
+
+            .letter-title {
+                font-size: 20px;
+            }
+
+            .letter-body {
+                padding: 20px 25px;
+                font-size: 15px;
+                max-height: 55vh;
+            }
+
+            .click-hint {
+                font-size: 12px;
+                bottom: -25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .letter-header {
+                padding: 15px 20px 10px;
+            }
+
+            .letter-body {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+
+            .letter-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="click-button" id="clickButton">
+            Click Here
+            <span class="heart-icon">💕</span>
+        </button>
+    </div>
+
+    <div class="letter-modal" id="letterModal">
+        <div class="letter-content">
+            <button class="close-btn" id="closeBtn">×</button>
+            <div class="letter-header">
+                <div class="letter-title">My Dearest Kidz</div>
+                <div class="letter-date">Written with all my heart</div>
+            </div>
+            <div class="letter-body">
+                <p>Halo Masyarakat Sejarah Maha Asyique,</p>
+                
+                <p>As I sit here writing this letter, gue sedikit bingung apa yang mau gue ketik dan kapan gue akan kasih, karena isinya akan nano-nano, harapan, penyemangat, perasaan gue selama ini ngajar, semuanya akan ada disini, jadi kalian bisa baca ini kapan ajasi.</p>
+                
+                <p>Gue membuat ini dengan kepercayaan kalian mungkin membutuhkan ini, entah berapa hari lagi kalian akan melaksanakan UTUL, rasa khawatir itu pasti ada, sama kayak gue yang dulu terrified what's life's gonna throw at me after graduation, what challenges will I face, no one actually taught me what life feels like after graduation and yep I feel lost.</p>
+                
+                <p>Sampai akhirnya gue ketemu Alternatifa Project, yang bisa bikin gue percaya sama diri gue lagi, saat-saat dimana gue rasa ga bakal ada orang yang percaya sama gue dengan kegagalan yang selalu menimpa gue saat itu, welp Bang Imam ternyata engga and that's why gue berjanji untuk bisa selalu percaya sama orang-orang yang mau berusaha, termasuk kalian.</p>
+                
+                <p>I know you're struggling and I know some days it feels impossible to keep going. But please, stay. Not because it's easy, but because there are still moments of love, warmth, and light ahead, moments you haven't lived yet. Remember, you're not a burden. You are not broken. You are worthy of peace, even when your mind tells you otherwise. One day, this weight will feel ligther. Until then, take it breath by breath. You are needed here.</p>
+                
+                <p>Welp, you know at some point everything is gonna go wrong and it's gonna feel hopeless, honestly you will feel alone as well , like the world's in pieces around you, but in those moments guys, when your heart is pounding and you're just sitting there on the edge of your bed. I hope you rest and pick yourself up again, because believe me you're gonna make it, alright?</p>
+                
+                <p>Dan ya, from my deepest heart, gue berterima kasih kepada Alam Semesta, Tuhan, Allah, any higher being yang memperbolehkan gue ketemu kalian di tahun terakhir gue kemungkinan mengajar, salah satu hadiah terbaik gue tahun ini adalah ketemu kalian, anak-anak baik yang selalu mau belajar, rajin ikut kelas, ga pernah nyerah sama mimpi masing-masing, makasih karena udah selalu bikin gue seneng di sela-sela kesibukan kehidupan gue, that's why I hope life treats each of you well and if it doesn't, I hope you treat yourself well.</p>
+                
+                <p>Also I hope you forgive yourself for all the things you are not, for all your flaws, for not being everything you wanted to be, and learn how to love yourself for who you are kidz.</p>
+                
+                <p>Be proud, karena gue selalu bangga sama kalian, you are good enough even if you aren't at your best, gue selalu percaya kalian pasti bisa hadapin apapun itu.</p>
+                
+                <p>Last, I wish in another life we will be another Baba yang selalu dibully muridnya, Tutor yang bisa tengil, bahas Soekarno sampe kesel, speedrun Sejarah Dunia, bahas hal random after class, because I believe I would recognize each of you in another lifetime entirely in different bodies, different times, and I would glad to always be your Baba in all of this, until the very last star in the sky burnt out into oblivion.</p>
+                
+                <div class="signature">
+                    Forever and always,<br>
+                    your tutor, Baba, Koh, Apin, Friend, Wilson Antoro.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const clickButton = document.getElementById('clickButton');
+        const letterModal = document.getElementById('letterModal');
+        const closeBtn = document.getElementById('closeBtn');
+
+        clickButton.addEventListener('click', function() {
+            letterModal.classList.add('show');
+        });
+
+        closeBtn.addEventListener('click', function() {
+            letterModal.classList.remove('show');
+        });
+
+        letterModal.addEventListener('click', function(e) {
+            if (e.target === letterModal) {
+                letterModal.classList.remove('show');
+            }
+        });
+
+        // Prevent scrolling of background when modal is open
+        letterModal.addEventListener('wheel', function(e) {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>
